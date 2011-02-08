@@ -1,4 +1,4 @@
 name: Minecart Mania Chest Control
-main: com.afforess.bukkit.minecartmaniachestcontrol.MinecartManiaChestControl
+main: com.afforess.minecartmaniachestcontrol.MinecartManiaChestControl
 version: 0.10
 author: Afforess
