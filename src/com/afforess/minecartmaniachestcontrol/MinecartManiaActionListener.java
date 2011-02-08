@@ -1,4 +1,4 @@
-package com.afforess.bukkit.minecartmaniachestcontrol;
+package com.afforess.minecartmaniachestcontrol;
 
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
