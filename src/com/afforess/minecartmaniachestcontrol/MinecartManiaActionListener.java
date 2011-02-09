@@ -3,14 +3,14 @@ package com.afforess.minecartmaniachestcontrol;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 
-import com.afforess.bukkit.minecartmaniacore.DirectionUtils;
-import com.afforess.bukkit.minecartmaniacore.MinecartManiaChest;
-import com.afforess.bukkit.minecartmaniacore.MinecartManiaMinecart;
-import com.afforess.bukkit.minecartmaniacore.MinecartManiaWorld;
-import com.afforess.bukkit.minecartmaniacore.MinecartUtils;
-import com.afforess.bukkit.minecartmaniacore.event.ChestPoweredEvent;
-import com.afforess.bukkit.minecartmaniacore.event.MinecartActionEvent;
-import com.afforess.bukkit.minecartmaniacore.event.MinecartManiaListener;
+import com.afforess.minecartmaniacore.DirectionUtils;
+import com.afforess.minecartmaniacore.MinecartManiaChest;
+import com.afforess.minecartmaniacore.MinecartManiaMinecart;
+import com.afforess.minecartmaniacore.MinecartManiaWorld;
+import com.afforess.minecartmaniacore.MinecartUtils;
+import com.afforess.minecartmaniacore.event.ChestPoweredEvent;
+import com.afforess.minecartmaniacore.event.MinecartActionEvent;
+import com.afforess.minecartmaniacore.event.MinecartManiaListener;
 
 public class MinecartManiaActionListener extends MinecartManiaListener{
 	
