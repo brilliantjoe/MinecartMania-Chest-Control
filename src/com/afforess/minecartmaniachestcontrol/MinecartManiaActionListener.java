@@ -1,5 +1,6 @@
 package com.afforess.minecartmaniachestcontrol;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 
@@ -19,33 +20,25 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 
 			MinecartManiaChest chest = event.getChest();
 			
-			if (MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX() - 1, chest.getY(), chest.getZ(), 2, DirectionUtils.CompassDirection.NORTH)){
-				if (chest.chest.getInventory().contains(Material.MINECART)) {
-					chest.removeItem(Material.MINECART.getId());
-					MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), chest.getX() - 1, chest.getY(), chest.getZ(), 0, chest);
-					event.setActionTaken(true);
-				}
+			Material minecartType = ChestUtils.getMinecartType(chest);
+			Location spawnLocation = ChestUtils.getSpawnLocationSignOverride(chest);
+			
+			if (spawnLocation == null && MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX() - 1, chest.getY(), chest.getZ(), 2, DirectionUtils.CompassDirection.NORTH)){
+				spawnLocation = new Location(chest.chest.getWorld(), chest.getX() - 1, chest.getY(), chest.getZ());
 			}
-			if (MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX() + 1, chest.getY(), chest.getZ(), 2, DirectionUtils.CompassDirection.SOUTH)){
-				if (chest.chest.getInventory().contains(Material.MINECART)) {
-					chest.removeItem(Material.MINECART.getId());
-					MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), chest.getX() + 1, chest.getY(), chest.getZ(), 0, chest);
-					event.setActionTaken(true);
-				}
+			if (spawnLocation == null && MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX() + 1, chest.getY(), chest.getZ(), 2, DirectionUtils.CompassDirection.SOUTH)){
+				spawnLocation = new Location(chest.chest.getWorld(), chest.getX() + 1, chest.getY(), chest.getZ());
 			}
-			if (MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() - 1, 2, DirectionUtils.CompassDirection.EAST)){
-				if (chest.chest.getInventory().contains(Material.MINECART)) {
-					chest.removeItem(Material.MINECART.getId());
-					MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() - 1, 0, chest);
-					event.setActionTaken(true);
-				}
+			if (spawnLocation == null && MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() - 1, 2, DirectionUtils.CompassDirection.EAST)){
+				spawnLocation = new Location(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() - 1);
 			}
-			if (MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() + 1, 2, DirectionUtils.CompassDirection.WEST)){
-				if (chest.chest.getInventory().contains(Material.MINECART)) {
-					chest.removeItem(Material.MINECART.getId());
-					MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() + 1, 0, chest);
-					event.setActionTaken(true);
-				}
+			if (spawnLocation == null && MinecartUtils.validMinecartTrack(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() + 1, 2, DirectionUtils.CompassDirection.WEST)){
+				spawnLocation = new Location(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() + 1);
+			}
+			if (spawnLocation != null && chest.contains(minecartType)) {
+				chest.removeItem(minecartType.getId());
+				event.setActionTaken(true);
+				MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), spawnLocation.getBlockX(), spawnLocation.getBlockY(), spawnLocation.getBlockZ(), minecartType, chest);
 			}
 		}
 	}
@@ -53,14 +46,23 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 	public void onMinecartActionEvent(MinecartActionEvent event) {
 		if (!event.isActionTaken()) {
 			MinecartManiaMinecart minecart = event.getMinecart();
-			if (minecart.getBlockTypeAhead() != null) {
+			
+			boolean action = false;
+			
+			if (!action && minecart.getBlockTypeAhead() != null) {
 				if (minecart.getBlockTypeAhead().getType().getId() == Material.CHEST.getId()) {
 					MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)minecart.getBlockTypeAhead().getState());
-					chest.addItem(Material.MINECART.getId());
+					chest.addItem(minecart.getType().getId());
 					minecart.kill(false);
-					event.setActionTaken(true);
+					action = true;
 				}
 			}
+
+			if (!action && minecart.isStorageMinecart()) {
+				action = ChestStorage.doChestStorage(minecart);
+			}
+			
+			event.setActionTaken(action);
 		}
 	}
 
