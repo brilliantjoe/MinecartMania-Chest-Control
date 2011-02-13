@@ -92,7 +92,7 @@ public abstract class ChestStorage {
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 }
