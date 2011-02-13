@@ -36,9 +36,10 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 				spawnLocation = new Location(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ() + 1);
 			}
 			if (spawnLocation != null && chest.contains(minecartType)) {
-				chest.removeItem(minecartType.getId());
-				event.setActionTaken(true);
-				MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), spawnLocation.getBlockX(), spawnLocation.getBlockY(), spawnLocation.getBlockZ(), minecartType, chest);
+				if (chest.removeItem(minecartType.getId())) {
+					event.setActionTaken(true);
+					MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), spawnLocation.getBlockX(), spawnLocation.getBlockY(), spawnLocation.getBlockZ(), minecartType, chest);
+				}
 			}
 		}
 	}
@@ -49,17 +50,22 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 			
 			boolean action = false;
 			
+			//Collect minecarts
 			if (!action && minecart.getBlockTypeAhead() != null) {
 				if (minecart.getBlockTypeAhead().getType().getId() == Material.CHEST.getId()) {
 					MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)minecart.getBlockTypeAhead().getState());
-					chest.addItem(minecart.getType().getId());
-					minecart.kill(false);
-					action = true;
+					if (chest.addItem(minecart.getType().getId())) {
+						minecart.kill(false);
+						action = true;
+					}
 				}
 			}
 
 			if (!action && minecart.isStorageMinecart()) {
 				action = ChestStorage.doChestStorage(minecart);
+			}
+			if (!action) {
+				action = ChestStorage.doCollectParallel(minecart);
 			}
 			
 			event.setActionTaken(action);

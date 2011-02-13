@@ -67,8 +67,32 @@ public abstract class ChestStorage {
 				chest.update();
 			}
 		}
-		
 		return action;
+	}
+	
+	public static boolean doCollectParallel(MinecartManiaMinecart minecart) {
+		ArrayList<Block> blockList = minecart.getParallelBlocks();
+		for (Block block : blockList) {
+			if (block.getState() instanceof Chest) {
+				MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)block.getState());
+				ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 1);
+				for (Sign sign : signList) {
+					for (int i = 0; i < 4; i++) {
+						if (sign.getLine(i).toLowerCase().contains("parallel")) {
+							sign.setLine(i, "[Parallel]");
+							sign.update();
+							if (!minecart.isMovingAway(block.getLocation())) {
+								if (chest.addItem(minecart.getType().getId())) {
+									minecart.kill(false);
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 }
