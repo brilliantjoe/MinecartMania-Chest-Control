@@ -7,9 +7,16 @@ import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
 import com.afforess.minecartmaniacore.MinecartManiaChest;
+import com.afforess.minecartmaniacore.MinecartManiaMinecart;
 import com.afforess.minecartmaniacore.SignUtils;
 
 public abstract class ChestUtils {
+	
+	public static void delayLaunchMinecart(final MinecartManiaMinecart minecart) {
+		if (minecart.isPoweredBeneath()) {
+			minecart.doLauncherBlock();
+		}
+	}
 
 	public static Material getMinecartType(MinecartManiaChest chest) {
 		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 2);

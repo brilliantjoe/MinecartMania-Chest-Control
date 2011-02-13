@@ -38,7 +38,15 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 			if (spawnLocation != null && chest.contains(minecartType)) {
 				if (chest.removeItem(minecartType.getId())) {
 					event.setActionTaken(true);
-					MinecartManiaWorld.spawnMinecart(chest.chest.getWorld(), spawnLocation.getBlockX(), spawnLocation.getBlockY(), spawnLocation.getBlockZ(), minecartType, chest);
+					MinecartManiaMinecart minecart = MinecartManiaWorld.spawnMinecart(spawnLocation, minecartType, chest);
+					
+					//Attempt to launch the minecart
+					@SuppressWarnings("rawtypes")
+					Class[] params = {MinecartManiaMinecart.class};
+					Object[] args = {minecart};
+					try {
+						MinecartManiaWorld.doAsyncTask(ChestUtils.class.getDeclaredMethod("delayLaunchMinecart", params), args);
+					} catch (Exception e) {	} 
 				}
 			}
 		}
