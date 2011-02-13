@@ -32,6 +32,21 @@ public abstract class ChestStorage {
 					if (sign.getLine(0).toLowerCase().contains("collect items")) {
 						sign.setLine(0, "[Collect Items]");
 						for (int i = 1; i < 4; i++) {
+							if (sign.getLine(i).trim().isEmpty()) {
+								continue;
+							}
+							
+							if (sign.getLine(i).toLowerCase().contains("all items")) {
+								sign.setLine(i, "[All Items]");
+								//Transfer as much as possible to the other chest
+								for (int j = 0; j < inv.getSize(); j++) {
+									if (!chest.addItem(inv.getItem(j))) {
+										break;
+									}
+									inv.clear(j);
+								}
+							}
+							
 							Material item = ItemUtils.itemStringToMaterial(sign.getLine(i).toLowerCase());
 							if (item != null) {
 								if (!sign.getLine(i).contains("[")) {
