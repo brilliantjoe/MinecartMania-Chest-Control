@@ -7,6 +7,7 @@ import org.bukkit.block.Chest;
 import com.afforess.minecartmaniacore.DirectionUtils;
 import com.afforess.minecartmaniacore.MinecartManiaChest;
 import com.afforess.minecartmaniacore.MinecartManiaMinecart;
+import com.afforess.minecartmaniacore.MinecartManiaTaskScheduler;
 import com.afforess.minecartmaniacore.MinecartManiaWorld;
 import com.afforess.minecartmaniacore.MinecartUtils;
 import com.afforess.minecartmaniacore.event.ChestPoweredEvent;
@@ -45,7 +46,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 					Class[] params = {MinecartManiaMinecart.class};
 					Object[] args = {minecart};
 					try {
-						MinecartManiaWorld.doAsyncTask(ChestUtils.class.getDeclaredMethod("delayLaunchMinecart", params), args);
+						MinecartManiaTaskScheduler.doAsyncTask(ChestUtils.class.getDeclaredMethod("delayLaunchMinecart", params), args);
 					} catch (Exception e) {	} 
 				}
 			}

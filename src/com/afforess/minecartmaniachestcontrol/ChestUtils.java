@@ -12,7 +12,7 @@ import com.afforess.minecartmaniacore.SignUtils;
 
 public abstract class ChestUtils {
 	
-	public static void delayLaunchMinecart(final MinecartManiaMinecart minecart) {
+	public static void delayLaunchMinecart(MinecartManiaMinecart minecart) {
 		if (minecart.isPoweredBeneath()) {
 			minecart.doLauncherBlock();
 		}
