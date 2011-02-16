@@ -8,6 +8,9 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.afforess.minecartmaniacore.Configuration;
+import com.afforess.minecartmaniacore.MinecartManiaWorld;
+
 public class MinecartManiaChestControl extends JavaPlugin {
 	
 	public MinecartManiaChestControl(PluginLoader pluginLoader,
@@ -27,7 +30,7 @@ public class MinecartManiaChestControl extends JavaPlugin {
 
 	public void onEnable(){
 		log = Logger.getLogger("Minecraft");
-		//Configuration.loadConfiguration();
+		Configuration.loadConfiguration(description, SettingList.config);
 	
         getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, listener, Priority.High, this);
 
@@ -37,5 +40,10 @@ public class MinecartManiaChestControl extends JavaPlugin {
 	
 	public void onDisable(){
 		
+	}
+	
+	public static boolean storageCartsStoreNearbyItems() {
+		return MinecartManiaWorld.getConfigurationValue("Storage Carts Store Nearby Items") instanceof Boolean && 
+		((Boolean)MinecartManiaWorld.getConfigurationValue("Storage Carts Store Nearby Items")).booleanValue();
 	}
 }

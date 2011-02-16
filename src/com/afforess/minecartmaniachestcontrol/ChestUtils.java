@@ -7,19 +7,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
 import com.afforess.minecartmaniacore.MinecartManiaChest;
-import com.afforess.minecartmaniacore.MinecartManiaMinecart;
-import com.afforess.minecartmaniacore.SignUtils;
+import com.afforess.minecartmaniacore.utils.SignUtils;
 
 public abstract class ChestUtils {
-	
-	public static void delayLaunchMinecart(MinecartManiaMinecart minecart) {
-		if (minecart.isPoweredBeneath()) {
-			minecart.doLauncherBlock();
-		}
-	}
-
 	public static Material getMinecartType(MinecartManiaChest chest) {
-		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 2);
+		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 2);
 
 		boolean empty = false;
 		boolean powered = false;
@@ -66,8 +58,8 @@ public abstract class ChestUtils {
 	}
 
 	public static Location getSpawnLocationSignOverride(MinecartManiaChest chest) {
-		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 2);
-		Location spawn = chest.chest.getBlock().getLocation();
+		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 2);
+		Location spawn = chest.getChest().getBlock().getLocation();
 
 		for (Sign sign : signList) {
 			for (int i = 0; i < 4; i++) {

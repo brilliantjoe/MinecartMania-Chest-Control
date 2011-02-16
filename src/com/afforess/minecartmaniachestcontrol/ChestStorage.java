@@ -8,26 +8,24 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.Inventory;
 
-import com.afforess.minecartmaniacore.ItemUtils;
 import com.afforess.minecartmaniacore.MinecartManiaChest;
 import com.afforess.minecartmaniacore.MinecartManiaMinecart;
+import com.afforess.minecartmaniacore.MinecartManiaStorageCart;
 import com.afforess.minecartmaniacore.MinecartManiaWorld;
-import com.afforess.minecartmaniacore.SignUtils;
+import com.afforess.minecartmaniacore.utils.SignUtils;
+import com.afforess.minecartmaniacore.utils.ItemUtils;
 
 public abstract class ChestStorage {
 
-	public static boolean doChestStorage(MinecartManiaMinecart minecart) {
+	public static boolean doChestStorage(MinecartManiaStorageCart minecart) {
 		ArrayList<Block> blockList = minecart.getParallelBlocks();
 		Inventory inv = minecart.getInventory();
-		if (inv == null) {
-			return false;
-		}
 		boolean action = false;
 		
 		for (Block block : blockList) {
 			if (block.getState() instanceof Chest) {
 				MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)block.getState());
-				ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 1);
+				ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 1);
 				for (Sign sign : signList) {
 					if (sign.getLine(0).toLowerCase().contains("collect items")) {
 						sign.setLine(0, "[Collect Items]");
@@ -75,7 +73,7 @@ public abstract class ChestStorage {
 		for (Block block : blockList) {
 			if (block.getState() instanceof Chest) {
 				MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)block.getState());
-				ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 1);
+				ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 1);
 				for (Sign sign : signList) {
 					for (int i = 0; i < 4; i++) {
 						if (sign.getLine(i).toLowerCase().contains("parallel")) {
