@@ -45,17 +45,19 @@ public abstract class ChestStorage {
 								}
 							}
 							
-							Material item = ItemUtils.itemStringToMaterial(sign.getLine(i).toLowerCase());
-							if (item != null) {
-								if (!sign.getLine(i).contains("[")) {
-									sign.setLine(i, "["+sign.getLine(i)+"]");
-								}
-								while (inv.contains(item)) {
-									action = true;
-									if (!chest.addItem(inv.getItem(inv.first(item)))) {
-										break;
+							Material[] items = ItemUtils.getItemStringToMaterial(sign.getLine(i).toLowerCase());
+							for (Material m : items) {
+								if (m != null) {
+									if (!sign.getLine(i).contains("[")) {
+										sign.setLine(i, "["+sign.getLine(i)+"]");
 									}
-									inv.clear(inv.first(item));
+									while (inv.contains(m)) {
+										action = true;
+										if (!chest.addItem(inv.getItem(inv.first(m)))) {
+											break;
+										}
+										inv.clear(inv.first(m));
+									}
 								}
 							}
 						}
