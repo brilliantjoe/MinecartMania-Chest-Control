@@ -52,7 +52,7 @@ public abstract class ChestStorage {
 								if (!deposit.addItem(withdraw.getItem(j))) {
 									break;
 								}
-								deposit.setItem(j, null);
+								withdraw.setItem(j, null);
 							}
 						}
 						else {
