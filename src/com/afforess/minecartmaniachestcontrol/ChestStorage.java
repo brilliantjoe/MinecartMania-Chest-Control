@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.inventory.ItemStack;
 
 import com.afforess.minecartmaniacore.MinecartManiaChest;
 import com.afforess.minecartmaniacore.MinecartManiaInventory;
@@ -17,6 +18,27 @@ import com.afforess.minecartmaniacore.utils.ItemUtils;
 import com.afforess.minecartmaniacore.utils.StringUtils;
 
 public abstract class ChestStorage {
+	
+	public static boolean doMinecartCollection(MinecartManiaMinecart minecart) {
+		if (minecart.getBlockTypeAhead() != null) {
+			if (minecart.getBlockTypeAhead().getType().getId() == Material.CHEST.getId()) {
+				MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)minecart.getBlockTypeAhead().getState());
+				if (minecart instanceof MinecartManiaStorageCart) {
+					MinecartManiaStorageCart storageCart = (MinecartManiaStorageCart)minecart;
+					for (ItemStack item : storageCart.getInventory().getContents()) {
+						if (!chest.addItem(item)) {
+							break;
+						}
+					}
+				}
+				if (chest.addItem(minecart.getType().getId())) {
+					minecart.kill(false);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public static boolean doChestStorage(MinecartManiaStorageCart minecart) {
 		ArrayList<Block> blockList = minecart.getParallelBlocks();
