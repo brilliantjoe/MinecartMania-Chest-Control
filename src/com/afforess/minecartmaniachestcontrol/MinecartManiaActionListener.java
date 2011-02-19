@@ -84,6 +84,9 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 					minecart.setDataValue("Farm Interval", new Integer(interval - 1));
 					return;
 				}
+				else {
+					minecart.setDataValue("Farm Interval", new Integer(minecart.getEntityDetectionRange()));
+				}
 				
 				Object[] param = { (MinecartManiaStorageCart)minecart };
 				@SuppressWarnings("rawtypes")
