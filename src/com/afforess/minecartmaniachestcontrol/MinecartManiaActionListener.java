@@ -6,7 +6,6 @@ import org.bukkit.entity.Item;
 import com.afforess.minecartmaniacore.MinecartManiaChest;
 import com.afforess.minecartmaniacore.MinecartManiaMinecart;
 import com.afforess.minecartmaniacore.MinecartManiaStorageCart;
-import com.afforess.minecartmaniacore.MinecartManiaTaskScheduler;
 import com.afforess.minecartmaniacore.MinecartManiaWorld;
 import com.afforess.minecartmaniacore.event.ChestPoweredEvent;
 import com.afforess.minecartmaniacore.event.MinecartActionEvent;
@@ -52,7 +51,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 		}
 		if (event.getEntity() instanceof Item) {
 			Item item = (Item)event.getEntity();
-			if (event.getMinecart().isStorageMinecart() && MinecartManiaChestControl.storageCartsStoreNearbyItems()) {
+			if (event.getMinecart().isStorageMinecart()) {
 				MinecartManiaStorageCart minecart = (MinecartManiaStorageCart) event.getMinecart();
 				if (minecart.addItem(MinecartManiaWorld.ItemToItemStack(item))) {
 					MinecartManiaWorld.kill(item);
@@ -77,28 +76,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 			if (!action) {
 				action = ChestStorage.doCollectParallel(minecart);
 			}
-			
-			if (minecart.isStorageMinecart()) {
-				int interval = MinecartManiaWorld.getIntValue(minecart.getDataValue("Farm Interval"));
-				if (interval != 0) {
-					minecart.setDataValue("Farm Interval", new Integer(interval - 1));
-					return;
-				}
-				else {
-					minecart.setDataValue("Farm Interval", new Integer(minecart.getEntityDetectionRange()));
-				}
-				
-				Object[] param = { (MinecartManiaStorageCart)minecart };
-				@SuppressWarnings("rawtypes")
-				Class[] paramtype = { MinecartManiaStorageCart.class };
-				try {
-					MinecartManiaTaskScheduler.doAsyncTask(StorageMinecartUtils.class.getDeclaredMethod("doAutoFarm", paramtype), param);
-				} catch (Exception e) {
-				
-				}
-			}
-			
-			
+
 			event.setActionTaken(action);
 		}
 	}
