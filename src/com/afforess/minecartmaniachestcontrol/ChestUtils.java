@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
 import com.afforess.minecartmaniacore.MinecartManiaChest;
+import com.afforess.minecartmaniacore.utils.DirectionUtils.CompassDirection;
 import com.afforess.minecartmaniacore.utils.SignUtils;
 
 public abstract class ChestUtils {
@@ -89,6 +90,23 @@ public abstract class ChestUtils {
 		
 		
 		return null;
+	}
+
+	public static CompassDirection getDirection(Location loc1,	Location loc2) {
+		if (loc1.getBlockX() - loc2.getBlockX() > 0) {
+			return CompassDirection.NORTH;
+		}
+		if (loc1.getBlockX() - loc2.getBlockX() < 0) {
+			return CompassDirection.SOUTH;
+		}
+		if (loc1.getBlockZ() - loc2.getBlockZ() > 0) {
+			return CompassDirection.EAST;
+		}
+		if (loc1.getBlockZ() - loc2.getBlockZ() < 0) {
+			return CompassDirection.WEST;
+		}
+		
+		return CompassDirection.NO_DIRECTION;
 	}
 
 }

@@ -11,6 +11,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
 import com.afforess.minecartmaniacore.MinecartManiaChest;
+import com.afforess.minecartmaniacore.MinecartManiaDoubleChest;
 import com.afforess.minecartmaniacore.MinecartManiaInventory;
 import com.afforess.minecartmaniacore.MinecartManiaMinecart;
 import com.afforess.minecartmaniacore.MinecartManiaStorageCart;
@@ -25,13 +26,19 @@ public abstract class ChestStorage {
 				MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)minecart.getBlockTypeAhead().getState());
 				if (minecart instanceof MinecartManiaStorageCart) {
 					MinecartManiaStorageCart storageCart = (MinecartManiaStorageCart)minecart;
+					boolean failed = false;
 					for (ItemStack item : storageCart.getInventory().getContents()) {
 						if (!chest.addItem(item)) {
+							failed = true;
 							break;
 						}
 					}
+					if (!failed) {
+						storageCart.getInventory().clear();
+					}
 				}
 				if (chest.addItem(minecart.getType().getId())) {
+					
 					minecart.kill(false);
 					return true;
 				}
@@ -49,6 +56,9 @@ public abstract class ChestStorage {
 			MinecartManiaInventory deposit = null;
 			if (block.getState() instanceof Chest) {
 				deposit = MinecartManiaWorld.getMinecartManiaChest((Chest)block.getState());
+				if (((MinecartManiaChest) deposit).getNeighborChest() != null) {
+					deposit = new MinecartManiaDoubleChest((MinecartManiaChest) deposit, ((MinecartManiaChest) deposit).getNeighborChest());
+				}
 			}
 			else if (block.getState() instanceof Dispenser) {
 				deposit = MinecartManiaWorld.getMinecartManiaDispenser((Dispenser)block.getState());

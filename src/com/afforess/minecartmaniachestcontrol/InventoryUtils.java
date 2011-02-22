@@ -33,10 +33,10 @@ public class InventoryUtils {
 						sign.setLine(i, StringUtils.addBrackets(sign.getLine(i)));
 						while (withdraw.contains(m)) {
 							action = true;
-							if (!deposit.addItem(withdraw.getItem(withdraw.getInventory().first(m)))) {
+							if (!deposit.addItem(withdraw.getItem(withdraw.first(m)))) {
 								break;
 							}
-							withdraw.setItem(withdraw.getInventory().first(m), null);
+							withdraw.setItem(withdraw.first(m), null);
 						}
 					}
 				}
