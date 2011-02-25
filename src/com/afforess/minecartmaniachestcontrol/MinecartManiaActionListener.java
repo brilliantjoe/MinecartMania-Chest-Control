@@ -73,13 +73,14 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 			if (!action) {
 				action = ChestStorage.doMinecartCollection(minecart);
 			}
-			if (!action && minecart.isStorageMinecart()) {
-				action = ChestStorage.doChestStorage((MinecartManiaStorageCart) minecart);
-			}
 			if (!action) {
 				action = ChestStorage.doCollectParallel(minecart);
 			}
-
+			if (minecart.isStorageMinecart()) {
+				ChestStorage.doChestStorage((MinecartManiaStorageCart) minecart);
+				ChestStorage.doFurnaceStorage((MinecartManiaStorageCart) minecart);
+				ChestStorage.doItemCompression((MinecartManiaStorageCart) minecart);
+			}
 			event.setActionTaken(action);
 		}
 	}
