@@ -56,7 +56,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 			Item item = (Item)event.getEntity();
 			if (event.getMinecart().isStorageMinecart()) {
 				MinecartManiaStorageCart minecart = (MinecartManiaStorageCart) event.getMinecart();
-				if (minecart.addItem(MinecartManiaWorld.ItemToItemStack(item))) {
+				if (minecart.addItem(item.getItemStack())) {
 					MinecartManiaWorld.kill(item);
 					event.setCancelled(true);
 				}
