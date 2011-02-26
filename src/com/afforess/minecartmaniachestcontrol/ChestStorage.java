@@ -27,6 +27,11 @@ public abstract class ChestStorage {
 		if (minecart.getBlockTypeAhead() != null) {
 			if (minecart.getBlockTypeAhead().getType().getId() == Material.CHEST.getId()) {
 				MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)minecart.getBlockTypeAhead().getState());
+				
+				if (SignCommands.isNoCollection(chest)) {
+					return false;
+				}
+				
 				if (minecart instanceof MinecartManiaStorageCart) {
 					MinecartManiaStorageCart storageCart = (MinecartManiaStorageCart)minecart;
 					boolean failed = false;
@@ -57,8 +62,10 @@ public abstract class ChestStorage {
 		for (Block block : blockList) {
 			MinecartManiaInventory withdraw = (MinecartManiaInventory)minecart;
 			MinecartManiaInventory deposit = null;
+			
 			if (block.getState() instanceof Chest) {
 				deposit = MinecartManiaWorld.getMinecartManiaChest((Chest)block.getState());
+				//check for double chest
 				if (((MinecartManiaChest) deposit).getNeighborChest() != null) {
 					deposit = new MinecartManiaDoubleChest((MinecartManiaChest) deposit, ((MinecartManiaChest) deposit).getNeighborChest());
 				}
@@ -215,6 +222,16 @@ public abstract class ChestStorage {
 				}
 			}
 		}
+	}
+	
+	public static boolean doEmptyChestInventory(MinecartManiaStorageCart minecart) {
+		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(minecart, 2);
+		for (Sign sign : signList) {
+			if (sign.getLine(0).toLowerCase().contains("trash items")) {
+				return InventoryUtils.doInventoryTransaction(minecart, null, sign);
+			}
+		}
+		return false;
 	}
 
 }

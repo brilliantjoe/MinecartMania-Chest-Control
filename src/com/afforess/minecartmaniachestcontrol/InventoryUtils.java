@@ -14,7 +14,8 @@ public class InventoryUtils {
 		String[] lines = new String[3];
 		for (int i = 1; i < 4; i++) {
 			lines[i-1] = sign.getLine(i);
-			sign.setLine(i, StringUtils.addBrackets(sign.getLine(i)));
+			if (!sign.getLine(i).trim().isEmpty())
+				sign.setLine(i, StringUtils.addBrackets(sign.getLine(i)));
 		}
 		sign.update();
 		
@@ -22,9 +23,13 @@ public class InventoryUtils {
 		for (Material m : items) {
 			if (m != null) {
 				while (withdraw.contains(m)) {
-					if (!deposit.addItem(withdraw.getItem(withdraw.first(m)))) {
+					if (deposit == null) {
+						//do nothing, just remove it from the withdraw inventory
+					}
+					else if (!deposit.addItem(withdraw.getItem(withdraw.first(m)))) {
 						break;
 					}
+					System.out.print(withdraw.getItem(withdraw.first(m)));
 					withdraw.setItem(withdraw.first(m), null);
 					action = true;
 				}

@@ -80,6 +80,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 				ChestStorage.doChestStorage((MinecartManiaStorageCart) minecart);
 				ChestStorage.doFurnaceStorage((MinecartManiaStorageCart) minecart);
 				ChestStorage.doItemCompression((MinecartManiaStorageCart) minecart);
+				ChestStorage.doEmptyChestInventory((MinecartManiaStorageCart) minecart);
 			}
 			event.setActionTaken(action);
 		}
