@@ -29,7 +29,6 @@ public class InventoryUtils {
 					else if (!deposit.addItem(withdraw.getItem(withdraw.first(m)))) {
 						break;
 					}
-					System.out.print(withdraw.getItem(withdraw.first(m)));
 					withdraw.setItem(withdraw.first(m), null);
 					action = true;
 				}

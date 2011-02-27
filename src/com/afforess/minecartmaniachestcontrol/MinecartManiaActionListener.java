@@ -49,7 +49,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 	}
 	
 	public void onMinecartNearEntityEvent(MinecartNearEntityEvent event) {
-		if (event.isCancelled()) {
+		if (event.isActionTaken()) {
 			return;
 		}
 		if (event.getEntity() instanceof Item) {
@@ -58,7 +58,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 				MinecartManiaStorageCart minecart = (MinecartManiaStorageCart) event.getMinecart();
 				if (minecart.addItem(item.getItemStack())) {
 					MinecartManiaWorld.kill(item);
-					event.setCancelled(true);
+					event.setActionTaken(true);
 				}
 			}
 		}
