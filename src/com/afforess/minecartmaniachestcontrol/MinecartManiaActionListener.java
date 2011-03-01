@@ -57,7 +57,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 			if (event.getMinecart().isStorageMinecart()) {
 				MinecartManiaStorageCart minecart = (MinecartManiaStorageCart) event.getMinecart();
 				if (minecart.addItem(item.getItemStack())) {
-					MinecartManiaWorld.kill(item);
+					item.remove();
 					event.setActionTaken(true);
 				}
 			}
@@ -76,7 +76,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 			if (!action) {
 				action = ChestStorage.doCollectParallel(minecart);
 			}
-			if (minecart.isStorageMinecart()) {
+			if (!action && minecart.isStorageMinecart()) {
 				ChestStorage.doChestStorage((MinecartManiaStorageCart) minecart);
 				ChestStorage.doFurnaceStorage((MinecartManiaStorageCart) minecart);
 				ChestStorage.doItemCompression((MinecartManiaStorageCart) minecart);
