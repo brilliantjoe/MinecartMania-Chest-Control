@@ -3,15 +3,15 @@ package com.afforess.minecartmaniachestcontrol;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
+import com.afforess.minecartmaniacore.Item;
 import com.afforess.minecartmaniacore.MinecartManiaChest;
 import com.afforess.minecartmaniacore.utils.DirectionUtils.CompassDirection;
 import com.afforess.minecartmaniacore.utils.SignUtils;
 
 public abstract class ChestUtils {
-	public static Material getMinecartType(MinecartManiaChest chest) {
+	public static Item getMinecartType(MinecartManiaChest chest) {
 		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(chest.getWorld(), chest.getX(), chest.getY(), chest.getZ(), 2);
 
 		boolean empty = false;
@@ -39,23 +39,23 @@ public abstract class ChestUtils {
 		}
 		
 		if (empty) {
-			if (chest.contains(Material.MINECART)) {
-				return Material.MINECART;
+			if (chest.contains(Item.MINECART)) {
+				return Item.MINECART;
 			}
 		}
 		if (powered) {
-			if (chest.contains(Material.POWERED_MINECART)) {
-				return Material.POWERED_MINECART;
+			if (chest.contains(Item.POWERED_MINECART)) {
+				return Item.POWERED_MINECART;
 			}
 		}
 		if (storage) {
-			if (chest.contains(Material.STORAGE_MINECART)) {
-				return Material.STORAGE_MINECART;
+			if (chest.contains(Item.STORAGE_MINECART)) {
+				return Item.STORAGE_MINECART;
 			}
 		}
 
 		//Returns standard minecart by default
-		return Material.MINECART;
+		return Item.MINECART;
 	}
 
 	public static Location getSpawnLocationSignOverride(MinecartManiaChest chest) {

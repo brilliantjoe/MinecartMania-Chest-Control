@@ -2,7 +2,6 @@ package com.afforess.minecartmaniachestcontrol;
 
 import java.util.ArrayList;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
@@ -10,6 +9,7 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import com.afforess.minecartmaniacore.Item;
 import com.afforess.minecartmaniacore.MinecartManiaChest;
 import com.afforess.minecartmaniacore.MinecartManiaDoubleChest;
 import com.afforess.minecartmaniacore.MinecartManiaFurnace;
@@ -25,7 +25,7 @@ public abstract class ChestStorage {
 	
 	public static boolean doMinecartCollection(MinecartManiaMinecart minecart) {
 		if (minecart.getBlockTypeAhead() != null) {
-			if (minecart.getBlockTypeAhead().getType().getId() == Material.CHEST.getId()) {
+			if (minecart.getBlockTypeAhead().getType().getId() == Item.CHEST.getId()) {
 				MinecartManiaChest chest = MinecartManiaWorld.getMinecartManiaChest((Chest)minecart.getBlockTypeAhead().getState());
 				
 				if (SignCommands.isNoCollection(chest)) {
@@ -66,7 +66,7 @@ public abstract class ChestStorage {
 			if (block.getState() instanceof Chest) {
 				deposit = MinecartManiaWorld.getMinecartManiaChest((Chest)block.getState());
 				//check for double chest
-				if (((MinecartManiaChest) deposit).getNeighborChest() != null) {
+				if (deposit != null && ((MinecartManiaChest) deposit).getNeighborChest() != null) {
 					deposit = new MinecartManiaDoubleChest((MinecartManiaChest) deposit, ((MinecartManiaChest) deposit).getNeighborChest());
 				}
 			}
@@ -82,11 +82,11 @@ public abstract class ChestStorage {
 				for (Sign sign : signList) {
 					if (sign.getLine(0).toLowerCase().contains("collect items")) {
 						sign.setLine(0, "[Collect Items]");
-						action = InventoryUtils.doInventoryTransaction(withdraw, deposit, sign);
+						action = InventoryUtils.doInventoryTransaction(withdraw, deposit, sign, minecart.getDirectionOfMotion());
 					}
 					else if (sign.getLine(0).toLowerCase().contains("deposit items")) {
 						sign.setLine(0, "[Deposit Items]");
-						action = InventoryUtils.doInventoryTransaction(deposit, withdraw, sign);
+						action = InventoryUtils.doInventoryTransaction(deposit, withdraw, sign, minecart.getDirectionOfMotion());
 					}
 				}
 			}
@@ -106,9 +106,9 @@ public abstract class ChestStorage {
 						String[] split = sign.getLine(i).split(":");
 						if (split.length < 2) continue;
 						split[0] = split[0].toLowerCase();
-						Material[] materials = ItemUtils.getItemStringToMaterial(split[1]);
+						Item[] materials = ItemUtils.getItemStringToMaterial(split[1]);
 						if (materials == null) continue;
-						for (Material m : materials) {
+						for (Item m : materials) {
 							MinecartManiaInventory withdraw = minecart;
 							MinecartManiaInventory deposit = furnace;	
 							int slot;
@@ -132,7 +132,7 @@ public abstract class ChestStorage {
 									action = true;
 								}
 								//Merge stacks together
-								else if (deposit.getItem(slot).getType() == m){
+								else if (m.equals(deposit.getItem(slot).getType())){
 									ItemStack item = withdraw.getItem(withdraw.first(m));
 									if (deposit.getItem(slot).getAmount() + item.getAmount() <= 64) {
 										deposit.setItem(slot, new ItemStack(item.getTypeId(), deposit.getItem(slot).getAmount() + item.getAmount(), item.getDurability()));
@@ -185,7 +185,7 @@ public abstract class ChestStorage {
 	public static void doItemCompression(MinecartManiaStorageCart minecart) {
 		ArrayList<Block> blockList = minecart.getParallelBlocks();
 		for (Block block : blockList) {
-			if (block.getType() == Material.WORKBENCH) {
+			if (block.getTypeId() == Item.WORKBENCH.getId()) {
 				ArrayList<Sign> signList = SignUtils.getAdjacentSignList(block.getWorld(), block.getX(), block.getY(), block.getZ(), 2);
 				for (Sign sign : signList) {
 					for (int i = 0; i < 4; i++) {
@@ -193,13 +193,13 @@ public abstract class ChestStorage {
 							sign.setLine(i, "[Compress Items]");
 							sign.update();
 							//TODO handling for custom recipies?
-							Material[][] compressable = { {Material.IRON_INGOT, Material.GOLD_INGOT}, {Material.IRON_BLOCK , Material.GOLD_BLOCK} };
+							Item[][] compressable = { {Item.IRON_INGOT, Item.GOLD_INGOT}, {Item.IRON_BLOCK , Item.GOLD_BLOCK} };
 							int n = 0;
-							for (Material m : compressable[0]) {
+							for (Item m : compressable[0]) {
 								int amt = 0;
 								int slot = 0;
 								for (ItemStack item : minecart.getContents()) {
-									if (item != null && item.getType() == m) {
+									if (item != null && m.equals(item.getType())) {
 										amt += item.getAmount();
 										minecart.setItem(slot, null);
 									}
@@ -228,7 +228,7 @@ public abstract class ChestStorage {
 		ArrayList<Sign> signList = SignUtils.getAdjacentSignList(minecart, 2);
 		for (Sign sign : signList) {
 			if (sign.getLine(0).toLowerCase().contains("trash items")) {
-				return InventoryUtils.doInventoryTransaction(minecart, null, sign);
+				return InventoryUtils.doInventoryTransaction(minecart, null, sign, minecart.getDirectionOfMotion());
 			}
 		}
 		return false;

@@ -1,8 +1,7 @@
 package com.afforess.minecartmaniachestcontrol;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Item;
+import com.afforess.minecartmaniacore.Item;
 import com.afforess.minecartmaniacore.MinecartManiaChest;
 import com.afforess.minecartmaniacore.MinecartManiaMinecart;
 import com.afforess.minecartmaniacore.MinecartManiaStorageCart;
@@ -22,7 +21,7 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 
 			MinecartManiaChest chest = event.getChest();
 			
-			Material minecartType = ChestUtils.getMinecartType(chest);
+			Item minecartType = ChestUtils.getMinecartType(chest);
 			Location spawnLocation = ChestUtils.getSpawnLocationSignOverride(chest);
 			if (spawnLocation == null && MinecartUtils.validMinecartTrack(chest.getWorld(), chest.getX() - 1, chest.getY(), chest.getZ(), 2, DirectionUtils.CompassDirection.NORTH)){
 				spawnLocation = new Location(chest.getWorld(), chest.getX() - 1, chest.getY(), chest.getZ());
@@ -52,8 +51,8 @@ public class MinecartManiaActionListener extends MinecartManiaListener{
 		if (event.isActionTaken()) {
 			return;
 		}
-		if (event.getEntity() instanceof Item) {
-			Item item = (Item)event.getEntity();
+		if (event.getEntity() instanceof org.bukkit.entity.Item) {
+			org.bukkit.entity.Item item = (org.bukkit.entity.Item)event.getEntity();
 			if (event.getMinecart().isStorageMinecart()) {
 				MinecartManiaStorageCart minecart = (MinecartManiaStorageCart) event.getMinecart();
 				if (minecart.addItem(item.getItemStack())) {
