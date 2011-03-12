@@ -68,8 +68,10 @@ public abstract class ChestStorage {
 				//check for double chest
 				if (deposit != null && ((MinecartManiaChest) deposit).getNeighborChest() != null) {
 					deposit = new MinecartManiaDoubleChest((MinecartManiaChest) deposit, ((MinecartManiaChest) deposit).getNeighborChest());
-				}
-			}
+                                }
+                                
+                        }
+
 			else if (block.getState() instanceof Dispenser) {
 				deposit = MinecartManiaWorld.getMinecartManiaDispenser((Dispenser)block.getState());
 			}
@@ -77,17 +79,29 @@ public abstract class ChestStorage {
 				deposit = MinecartManiaWorld.getMinecartManiaFurnace((Furnace)block.getState());
 			}
 			if (deposit != null) {
+                               
 				ArrayList<Sign> signList = SignUtils.getAdjacentSignList(minecart.minecart.getWorld(), block.getX(), block.getY(), block.getZ(), 1);
 				
 				for (Sign sign : signList) {
+                                        
 					if (sign.getLine(0).toLowerCase().contains("collect items")) {
-						sign.setLine(0, "[Collect Items]");
-						action = InventoryUtils.doInventoryTransaction(withdraw, deposit, sign, minecart.getDirectionOfMotion());
-					}
+                                                if (!((MinecartManiaInventory)deposit).isRedstonePower()) {
+                                                    sign.setLine(0, "[Collect Items]");
+                                                    action = InventoryUtils.doInventoryTransaction(withdraw, deposit, sign, minecart.getDirectionOfMotion());
+                                                } else {
+                                                    //sign.setLine(0, "[Deposit Items]");
+                                                    action = InventoryUtils.doInventoryTransaction(deposit, withdraw, sign, minecart.getDirectionOfMotion());
+                                                }
+                                        }
 					else if (sign.getLine(0).toLowerCase().contains("deposit items")) {
-						sign.setLine(0, "[Deposit Items]");
-						action = InventoryUtils.doInventoryTransaction(deposit, withdraw, sign, minecart.getDirectionOfMotion());
-					}
+                                                if (!((MinecartManiaInventory)deposit).isRedstonePower()) {
+                                                    sign.setLine(0, "[Deposit Items]");
+                                                    action = InventoryUtils.doInventoryTransaction(deposit, withdraw, sign, minecart.getDirectionOfMotion());
+                                                } else {
+                                                   
+                                                    action = InventoryUtils.doInventoryTransaction(withdraw, deposit, sign, minecart.getDirectionOfMotion());
+                                                }
+                                        }
 				}
 			}
 		}
